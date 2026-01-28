@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { PodcastContext } from "../context/PodcastContext";
+import { PodcastContext } from "../../context/PodcastContext";
 import styles from "./SearchBar.module.css";
 
 /**

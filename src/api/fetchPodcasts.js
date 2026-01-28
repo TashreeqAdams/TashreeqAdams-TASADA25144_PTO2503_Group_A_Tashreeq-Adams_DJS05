@@ -23,3 +23,5 @@ export async function fetchPodcasts(setPodcasts, setError, setLoading) {
     setLoading(false);
   }
 }
+
+// Add fetch for a single podcast
