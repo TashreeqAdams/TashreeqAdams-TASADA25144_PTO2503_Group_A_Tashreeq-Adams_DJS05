@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { PodcastProvider } from "./context/PodcastContext";
 import { fetchPodcasts } from "./api/fetchPodcasts";
 import { genres } from "./data";
+import { Routes, Route } from "react-router-dom";
+import { PodcastDetail } from "./components/Podcasts";
 import Header from "./components/Header";
 import SearchBar from "./components/Filters/SearchBar";
 import SortSelect from "./components/Filters/SortSelect";
@@ -28,35 +30,44 @@ export default function App() {
       <Header />
 
       <PodcastProvider initialPodcasts={podcasts}>
-        <main className={styles.main}>
-          <section className={styles.controls}>
-            <SearchBar />
-            <GenreFilter genres={genres} />
-            <SortSelect />
-          </section>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <main className={styles.main}>
+                <section className={styles.controls}>
+                  <SearchBar />
+                  <GenreFilter genres={genres} />
+                  <SortSelect />
+                </section>
 
-          {loading && (
-            <div className={styles.messageContainer}>
-              <div className={styles.spinner}></div>
-              <p>Loading podcasts...</p>
-            </div>
-          )}
+                {loading && (
+                  <div className={styles.messageContainer}>
+                    <div className={styles.spinner}></div>
+                    <p>Loading podcasts...</p>
+                  </div>
+                )}
 
-          {error && (
-            <div className={styles.message}>
-              <div className={styles.error}>
-                Error occurred while fetching podcasts: {error}
-              </div>
-            </div>
-          )}
+                {error && (
+                  <div className={styles.message}>
+                    <div className={styles.error}>
+                      Error occurred while fetching podcasts: {error}
+                    </div>
+                  </div>
+                )}
 
-          {!loading && !error && (
-            <>
-              <PodcastGrid genres={genres} />
-              <Pagination />
-            </>
-          )}
-        </main>
+                {!loading && !error && (
+                  <>
+                    <PodcastGrid genres={genres} />
+                    <Pagination />
+                  </>
+                )}
+              </main>
+            }
+          />
+
+          <Route path="/podcast/:id" element={<PodcastDetail />} />
+        </Routes>
       </PodcastProvider>
     </>
   );
