@@ -1,3 +1,4 @@
+import { fetchSinglePodcast } from "../../api/fetchPodcasts";
 import { formatDate } from "../../utils/formatDate";
 import styles from "./PodcastCard.module.css";
 import { Link } from "react-router-dom";
@@ -28,17 +29,19 @@ export default function PodcastCard({ podcast, genres }) {
   });
 
   return (
-    <Link to={`/podcast/${podcast.id}`}>
-      <div className={styles.card}>
-        <img src={podcast.image} alt={podcast.title} />
+    <Link
+      to={`/podcast/${podcast.id}`}
+      className={styles.card}
+      onClick={() => fetchSinglePodcast}
+    >
+      <img src={podcast.image} alt={podcast.title} />
 
-        <h3>{podcast.title}</h3>
-        <p className={styles.seasons}>{podcast.seasons} seasons</p>
-        <div className={styles.tags}>{genreSpans}</div>
-        <p className={styles.updatedText}>
-          Updated {formatDate(podcast.updated)}
-        </p>
-      </div>
+      <h3>{podcast.title}</h3>
+      <p className={styles.seasons}>{podcast.seasons} seasons</p>
+      <div className={styles.tags}>{genreSpans}</div>
+      <p className={styles.updatedText}>
+        Updated {formatDate(podcast.updated)}
+      </p>
     </Link>
   );
 }

@@ -3,7 +3,7 @@ import { PodcastProvider } from "./context/PodcastContext";
 import { fetchPodcasts } from "./api/fetchPodcasts";
 import { genres } from "./data";
 import { Routes, Route } from "react-router-dom";
-import { PodcastDetail } from "./components/Podcasts";
+import PodcastDetail from "./components/Podcasts/PodcastDetail";
 import Header from "./components/Header";
 import SearchBar from "./components/Filters/SearchBar";
 import SortSelect from "./components/Filters/SortSelect";
