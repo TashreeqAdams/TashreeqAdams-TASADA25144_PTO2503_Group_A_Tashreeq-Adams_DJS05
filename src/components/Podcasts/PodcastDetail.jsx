@@ -6,12 +6,19 @@ import styles from "./PodcastDetail.module.css";
 export default function PodcastDetail() {
   const { id } = useParams();
   const [podcast, setPodcast] = useState([]);
+  const [selectedSeason, setSelectedSeason] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchSinglePodcast(id, setPodcast, setError, setLoading);
   }, [id]);
+
+  useEffect(() => {
+    if (podcast?.seasons?.length) {
+      setSelectedSeason(podcast.seasons[0]);
+    }
+  }, [podcast]);
 
   if (loading) return <p>Loading podcast...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -24,8 +31,15 @@ export default function PodcastDetail() {
       <p>{podcast.description}</p>
       <p>Last updated: {podcast.updated}</p>
       <p>Genres: {podcast.genres?.join(", ")}</p>
-      <p>Total seasons:</p>
-      <p>Total episodes:</p>
+      <p>Total seasons: {podcast.seasons?.length}</p>
+      <p>
+        Total episodes:{""}
+        {podcast.seasons.reduce(
+          (total, season) => total + season.episodes.length,
+          0
+        )}
+      </p>
+      <h2>Current Season</h2>
     </div>
   );
 }
