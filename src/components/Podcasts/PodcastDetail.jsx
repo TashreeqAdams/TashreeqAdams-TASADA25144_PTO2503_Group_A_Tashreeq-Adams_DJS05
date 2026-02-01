@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./PodcastDetail.module.css";
 import { formatDate } from "../../utils/formatDate";
+import PodcastCard from "./PodcastCard";
 
-export default function PodcastDetail() {
+export default function PodcastDetail({ genres = [] }) {
   const { id } = useParams();
-  const [podcast, setPodcast] = useState([]);
+  const [podcast, setPodcast] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +26,18 @@ export default function PodcastDetail() {
   if (error) return <p>Error: {error}</p>;
   if (!podcast) return <p>Podcast not found</p>;
 
+  const GENRES = {
+    1: "Personal Growth",
+    2: "Investigative Journalism",
+    3: "History",
+    4: "Comedy",
+    5: "Entertainment",
+    6: "Business",
+    7: "Fiction",
+    8: "News",
+    9: "Kids and Family",
+  };
+
   return (
     <div className={styles.detailContainer}>
       <div className={styles.detailInfo}>
@@ -36,7 +49,14 @@ export default function PodcastDetail() {
         />
         <p>{podcast.description}</p>
         <p>Last updated: {formatDate(podcast.updated)}</p>
-        <p>Genres: {podcast.genres?.join(", ")}</p>
+        <p>
+          Genres:{" "}
+          {podcast.genres.map((title) => (
+            <span key={title} className={styles.genreTag}>
+              {title}
+            </span>
+          ))}
+        </p>
         <p>Total seasons: {podcast.seasons?.length}</p>
         <p>
           Total episodes:{""}
@@ -74,19 +94,17 @@ export default function PodcastDetail() {
       {selectedSeason && (
         <div className={styles.seasonBlock}>
           <h2>{selectedSeason.title}</h2>
-
+          <p>{selectedSeason.description}</p>
           <ul className={styles.episodeList}>
             {selectedSeason.episodes.map((ep) => (
-              <div className={styles.episodeTile}>
+              <li key={ep.id} className={styles.episodeTile}>
                 <img
                   className={styles.episodeImage}
                   src={podcast.image}
-                  alt={podcast.title}
+                  alt={ep.title}
                 />
-                <li className={styles.episodeList} key={ep.id}>
-                  {ep.title}
-                </li>
-              </div>
+                {ep.title}
+              </li>
             ))}
           </ul>
         </div>
