@@ -1,4 +1,3 @@
-import { fetchSinglePodcast } from "../../api/fetchPodcasts";
 import { formatDate } from "../../utils/formatDate";
 import styles from "./PodcastCard.module.css";
 import { Link } from "react-router-dom";
@@ -29,11 +28,7 @@ export default function PodcastCard({ podcast, genres }) {
   });
 
   return (
-    <Link
-      to={`/podcast/${podcast.id}`}
-      className={styles.card}
-      onClick={() => fetchSinglePodcast}
-    >
+    <Link to={`/podcast/${podcast.id}`} className={styles.card}>
       <img src={podcast.image} alt={podcast.title} />
 
       <h3>{podcast.title}</h3>

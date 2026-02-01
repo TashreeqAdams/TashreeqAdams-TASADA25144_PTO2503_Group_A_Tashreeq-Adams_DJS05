@@ -1,11 +1,22 @@
 import { fetchSinglePodcast } from "../../api/fetchPodcasts";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import styles from "./PodcastDetail.module.css";
 import { formatDate } from "../../utils/formatDate";
-import PodcastCard from "./PodcastCard";
+import styles from "./PodcastDetail.module.css";
 
-export default function PodcastDetail({ genres = [] }) {
+const genres = [
+  { id: 1, title: "Personal Growth" },
+  { id: 2, title: "Investigative Journalism" },
+  { id: 3, title: "History" },
+  { id: 4, title: "Comedy" },
+  { id: 5, title: "Entertainment" },
+  { id: 6, title: "Business" },
+  { id: 7, title: "Fiction" },
+  { id: 8, title: "News" },
+  { id: 9, title: "Kids and Family" },
+];
+
+export default function PodcastDetail() {
   const { id } = useParams();
   const [podcast, setPodcast] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState(null);
@@ -26,22 +37,21 @@ export default function PodcastDetail({ genres = [] }) {
   if (error) return <p>Error: {error}</p>;
   if (!podcast) return <p>Podcast not found</p>;
 
-  const GENRES = {
-    1: "Personal Growth",
-    2: "Investigative Journalism",
-    3: "History",
-    4: "Comedy",
-    5: "Entertainment",
-    6: "Business",
-    7: "Fiction",
-    8: "News",
-    9: "Kids and Family",
-  };
+  const genreSpans =
+    podcast?.genres?.map((id, index) => {
+      const match = genres?.find((genre) => genre.id === id);
+      return (
+        <span key={`${id}-${index}`} className={styles.tag}>
+          {match ? match.title : `Unknown (${id})`}
+        </span>
+      );
+    }) || [];
 
   return (
     <div className={styles.detailContainer}>
       <div className={styles.detailInfo}>
         <h1>{podcast.title}</h1>
+
         <img
           className={styles.detailImage}
           src={podcast.image}
@@ -49,19 +59,12 @@ export default function PodcastDetail({ genres = [] }) {
         />
         <p>{podcast.description}</p>
         <p>Last updated: {formatDate(podcast.updated)}</p>
-        <p>
-          Genres:{" "}
-          {podcast.genres.map((title) => (
-            <span key={title} className={styles.genreTag}>
-              {title}
-            </span>
-          ))}
-        </p>
+        <div className={styles.tags}>{genreSpans}</div>
         <p>Total seasons: {podcast.seasons?.length}</p>
         <p>
           Total episodes:{""}
           {podcast.seasons.reduce(
-            (total, season) => total + season.episodes.length,
+            (total, season) => total + (season.episodes?.length || 0),
             0
           )}
         </p>
@@ -70,13 +73,15 @@ export default function PodcastDetail({ genres = [] }) {
       <div className={styles.seasonSection}>
         <h2>Current Season</h2>
 
+        {/* Season filter */}
+
         <label className={styles.label}>
           <select
             className={styles.select}
             value={selectedSeason?.season || ""}
             onChange={(e) => {
               const seasonNum = Number(e.target.value);
-              const season = podcast.seasons.find(
+              const season = podcast?.seasons?.find(
                 (s) => s.season === seasonNum
               );
               setSelectedSeason(season);
@@ -91,22 +96,25 @@ export default function PodcastDetail({ genres = [] }) {
         </label>
       </div>
 
+      {/* Selected season and episodes */}
+
       {selectedSeason && (
         <div className={styles.seasonBlock}>
           <h2>{selectedSeason.title}</h2>
-          <p>{selectedSeason.description}</p>
-          <ul className={styles.episodeList}>
-            {selectedSeason.episodes.map((ep) => (
-              <li key={ep.id} className={styles.episodeTile}>
+          <ol className={styles.episodeList}>
+            {selectedSeason?.episodes?.map((ep, index) => (
+              <li key={`${ep.id}-${index}`} className={styles.episodeTile}>
                 <img
                   className={styles.episodeImage}
-                  src={podcast.image}
+                  src={selectedSeason.image}
                   alt={ep.title}
                 />
-                {ep.title}
+                {ep.episode}
+                {" • "}
+                {ep.title} {ep.description.slice(0, 100) + "..."}
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
       )}
     </div>

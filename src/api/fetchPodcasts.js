@@ -31,6 +31,7 @@ export async function fetchSinglePodcast(id, setPodcast, setError, setLoading) {
     const res = await fetch(`https://podcast-api.netlify.app/id/${id}`);
     if (!res.ok) throw new Error(`${res.status}`);
     const data = await res.json();
+    console.log("Single podcast data:", data);
     setPodcast(data);
   } catch (err) {
     console.error("Failed to fetch podcasts:", err);
