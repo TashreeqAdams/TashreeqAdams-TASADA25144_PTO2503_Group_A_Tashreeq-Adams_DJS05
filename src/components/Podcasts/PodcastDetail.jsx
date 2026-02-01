@@ -40,7 +40,7 @@ export default function PodcastDetail() {
   console.log("podcast.genres:", podcast.genres);
   console.log("genres:", genres);
 
-  const genreSpans = podcast.genres?.map((genre) => (
+  const genreSpans = podcast.genres.map((genre) => (
     <span key={genre} className={styles.tag}>
       {genre}
     </span>
