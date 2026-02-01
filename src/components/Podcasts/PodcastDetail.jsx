@@ -37,15 +37,14 @@ export default function PodcastDetail() {
   if (error) return <p>Error: {error}</p>;
   if (!podcast) return <p>Podcast not found</p>;
 
-  const genreSpans =
-    podcast?.genres?.map((id, index) => {
-      const match = genres?.find((genre) => genre.id === id);
-      return (
-        <span key={`${id}-${index}`} className={styles.tag}>
-          {match ? match.title : `Unknown (${id})`}
-        </span>
-      );
-    }) || [];
+  console.log("podcast.genres:", podcast.genres);
+  console.log("genres:", genres);
+
+  const genreSpans = podcast.genres?.map((genre) => (
+    <span key={genre} className={styles.tag}>
+      {genre}
+    </span>
+  )) ?? <span className={styles.tag}>No genres</span>;
 
   return (
     <div className={styles.detailContainer}>
@@ -95,9 +94,7 @@ export default function PodcastDetail() {
           </select>
         </label>
       </div>
-
       {/* Selected season and episodes */}
-
       {selectedSeason && (
         <div className={styles.seasonBlock}>
           <h2>{selectedSeason.title}</h2>
