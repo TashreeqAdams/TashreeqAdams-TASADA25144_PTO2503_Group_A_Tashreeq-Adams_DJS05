@@ -37,10 +37,7 @@ export default function PodcastDetail() {
   if (error) return <p>Error: {error}</p>;
   if (!podcast) return <p>Podcast not found</p>;
 
-  console.log("podcast.genres:", podcast.genres);
-  console.log("genres:", genres);
-
-  const genreSpans = podcast.genres.map((genre) => (
+  const genreSpans = podcast?.genres.map((genre) => (
     <span key={genre} className={styles.tag}>
       {genre}
     </span>
@@ -62,7 +59,7 @@ export default function PodcastDetail() {
         <p>Total seasons: {podcast.seasons?.length}</p>
         <p>
           Total episodes:{""}
-          {podcast.seasons.reduce(
+          {podcast.seasons?.reduce(
             (total, season) => total + (season.episodes?.length || 0),
             0
           )}
